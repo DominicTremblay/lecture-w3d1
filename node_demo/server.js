@@ -1,5 +1,6 @@
 const http = require('http');
 const PORT = 3001;
+const todos = require('./db/todos');
 
 const server = http.createServer((req, res) => {
 
@@ -13,25 +14,31 @@ const server = http.createServer((req, res) => {
 
   console.log("Method:", req.method, "url:", req.url);
 
+  // route of end point
+  const route = `${req.method} ${req.url}`;
 
-  if (req.method === 'GET' && req.url === '/') {
+  switch(route) {
+  case 'GET /':
     // get the homepage
-
     // sending a response to the client
-
+    res.statusCode = 200;
     res.write('Homepage');
     res.end();
-
-
-  }
-
-  if (req.method === 'GET' && req.url === '/todos') {
-    // list of todos
-
-    res.write('list of todos');
+  
+    break;
+  case 'GET /todos':
+  // list of todos
+    res.statusCode = 200;
+    res.write(JSON.stringify(todos));
     res.end();
+    break;
 
+  default:
+    res.statusCode = 404;
+    res.write('404 not found');
+    res.end();
   }
+
 
 
 });
