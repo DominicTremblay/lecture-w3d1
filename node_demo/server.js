@@ -28,6 +28,58 @@ const server = http.createServer((req, res) => {
 
   console.log("Method:", req.method, "url:", req.url);
 
+  const getBody = (cb) => {
+    // extracting the body of the request
+
+    let buffer = '';
+
+    req.on('data', chunk => {
+      // getting the body of the request one chunk at a time
+      buffer += chunk;
+
+    });
+
+    req.on('end', () => {
+      // this triggers when we do have all the chunks
+      cb(null, JSON.parse(buffer));
+    });
+
+
+    req.on('error', err => {
+      // errors
+      cb(err);
+    });
+
+  };
+
+
+  const createNewTodo = (cb) => {
+    // capture the data being sent by the request
+    // extract the data from the body of the request
+
+    getBody((err, body) => {
+
+      if (err) {
+        throw new Error('Error extracting content from request');
+      }
+
+      const newTodo = {
+        id: Math.random().toString(36).substr(2,8),
+        type: body.type,
+        description: body.description
+      };
+
+      todos.push(newTodo);
+
+      cb(todos);
+
+    });
+
+
+    // creating a new todo and add it to the db
+
+  };
+
 
   // route of end point
   const route = `${req.method} ${req.url}`;
@@ -63,7 +115,17 @@ const server = http.createServer((req, res) => {
     break;
 
   case 'POST /todos':
-    console.log('Creating a todo');
+
+    // capture the data being sent by the request
+
+    createNewTodo(todos => {
+
+      res.writeHead(301, {'Location': '/todos'});
+      res.end();
+
+    });
+
+
     break;
 
   default:
