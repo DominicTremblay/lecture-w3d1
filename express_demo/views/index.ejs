@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Todos</title>
+  </head>
+  <body>
+    <h1>Welcome to todos API</h1>
+
+    <h2>Todos Get Request</h2>
+    <code>
+      curl http://localhost:3001/todos
+    </code>
+
+    <h2>Todos Post Request</h2>
+    <code>
+      curl -X POST -H "Content-Type: application/json" -d
+      '{"type":"chores","description":"walk the dog"}'
+      http://localhost:3001/todos
+    </code>
+  </body>
+</html>
