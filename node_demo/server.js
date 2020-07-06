@@ -1,6 +1,20 @@
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const PORT = 3001;
 const todos = require('./db/todos');
+
+const renderHTML = (fileName, cb) => {
+
+  // create the full path to our file
+
+
+  const filePath = path.join(__dirname, 'views', fileName);
+
+  fs.readFile(filePath, 'utf-8', cb);
+
+};
+
 
 const server = http.createServer((req, res) => {
 
@@ -14,29 +28,57 @@ const server = http.createServer((req, res) => {
 
   console.log("Method:", req.method, "url:", req.url);
 
+
   // route of end point
   const route = `${req.method} ${req.url}`;
 
-  switch(route) {
+  switch (route) {
   case 'GET /':
     // get the homepage
     // sending a response to the client
-    res.statusCode = 200;
-    res.write('Homepage');
-    res.end();
-  
+
+    renderHTML('index.html', (err, file) => {
+      
+      if (err) {
+        throw new Error('Cannot read the file');
+      }
+      res.statusCode = 200;
+      res.write(file);
+      res.end();
+
+    });
+
     break;
   case 'GET /todos':
   // list of todos
     res.statusCode = 200;
-    res.write(JSON.stringify(todos));
-    res.end();
+    if (todos) {
+      res.write(JSON.stringify(todos));
+      res.end();
+    } else {
+      res.statusCode = 500;
+      res.write('Cannot get todos');
+      res.end();
+    }
+    break;
+
+  case 'POST /todos':
+    console.log('Creating a todo');
     break;
 
   default:
-    res.statusCode = 404;
-    res.write('404 not found');
-    res.end();
+
+    renderHTML('404.html', (err, file) => {
+      
+      if (err) {
+        throw new Error('Cannot read the file');
+      }
+      res.statusCode = 404;
+      res.write(file);
+      res.end();
+
+    });
+
   }
 
 
