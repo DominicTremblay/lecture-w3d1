@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todos</title>
+</head>
+<body>
+
+  <h1>List of todos</h1>
+
+
+  <ul>
+    <% for( let todo of todos ) { %>
+      <li>Type: <%= todo.type %> , description: <%= todo.description %> </li>
+    <% } %>
+   
+  </ul>
+  
+</body>
+</html>
